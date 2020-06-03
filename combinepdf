@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if [ $# -eq 0 ]; then
+	echo "Usage: combinepdf -o output.pdf input1.pdf input2.pdf ..."
+	exit 1
+fi
+
+while getopts ":o:" opt; do
+  case $opt in
+    o)
+      gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=$OPTARG -dBATCH $@
+      echo "Outputted to $OPTARG"
+      exit 1
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
+gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=combined.pdf -dBATCH $@
+echo "Outputted to combined.pdf"
